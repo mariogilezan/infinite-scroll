@@ -1,8 +1,15 @@
+import { Container, GlobalStyle } from './styles/globalStyles';
+import GistsList from './components/GistsList';
+
 function App() {
   return (
-    <div className='App'>
-      <h1>Github Users</h1>
-    </div>
+    <>
+      <GlobalStyle />
+      <Container>
+        <h1>Gists</h1>
+        <GistsList />
+      </Container>
+    </>
   );
 }
 
