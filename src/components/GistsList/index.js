@@ -1,4 +1,4 @@
-import { motion, useAnimation } from 'framer-motion';
+import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import useGetPublicGists from '../../hooks/useGetPublicGists';
@@ -13,16 +13,12 @@ export default function GistsList() {
   const [pageNumber, setPageNumber] = useState(1);
   const { loading, gistsData, hasMore } = useGetPublicGists(pageNumber);
   const { ref: lastGistItemRef, inView } = useInView();
-  const controls = useAnimation();
 
   useEffect(() => {
     if (inView && hasMore) {
       setPageNumber((prevPageNumber) => prevPageNumber + 1);
     }
-    if (!inView) {
-      controls.start('visible');
-    }
-  }, [inView, hasMore, controls]);
+  }, [inView, hasMore]);
 
   return (
     <GistsListWrapper>
@@ -35,8 +31,8 @@ export default function GistsList() {
             ref={gistsData.length === index + 1 ? lastGistItemRef : null}
           >
             <motion.div
-              animate={controls}
               initial='hidden'
+              animate='visible'
               variants={imageVariants}
               className='imageWrapper'
             >
