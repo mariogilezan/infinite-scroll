@@ -6,9 +6,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 
-// 2. Solution: import files from different folder or create them in this file
-import People from 'example-folder';
-import House from 'example-folder';
+// 3. Solution: import components from different folder or create them in this file
+import People from './example-folder/People';
+import House from './example-folder/House';
+
+// 5. Solution: import fetchPeople action method
+import { fetchPeople } from './actions/peopleActions';
 
 const mapCompaniesIntoPeople = (people, companies) => {
   /* Map Company names into each person that they work for */
@@ -19,12 +22,18 @@ const mapPeopleIntoHouses = (houses, people) => {
 };
 
 class App extends React.Component {
-  render() {
+  // 1. Solution: call fetch people in this lifecycle method if we want to call it once
+  componentDidMount() {
     this.props.fetchPeople();
+  }
+
+  render() {
+    // 1. Problem: this method will be called every time something changes in render lifecycle
+    // this.props.fetchPeople();
     return (
-      // 1. Problem: passed styles object in View is not been declared
+      // 2. Problem: passed styles object in View is not been declared
       <View style={styles.container}>
-        {/* 2. Problem: People and House components are not created/imported in this file */}
+        {/* 3. Problem: People and House components are not created/imported in this file */}
         <People data={this.props.people} />
         <House data={this.props.houses} />
       </View>
@@ -32,7 +41,7 @@ class App extends React.Component {
   }
 }
 
-// 1. Solution: Create styles object using imported StyleSheet
+// 2. Solution: Create styles object using imported StyleSheet
 const styles = StyleSheet.create({
   conatiner: {
     width: '100%',
@@ -42,14 +51,14 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  // 3. Solution: change the variable name
+  // 4. Solution: change the variable name
   const {
     people: { data },
     companies,
     houses: housesChanged,
   } = state;
   const people = mapCompaniesIntoPeople(data, companies);
-  // 3. Problem: houses variable is already been declared on line 48
+  // 4. Problem: houses variable is already been declared on line 58
   const houses = mapPeopleIntoHouses(housesChanged, data);
   return {
     people,
@@ -57,15 +66,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-// 4. Solution: this action function needs to be created on separate folder where we deal with redux specific functionalities
-const fetchPeople = () => {
-  return {
-    type: 'FETCH_PEOPLE',
-  };
-};
-
 const mapDispatchToProps = (dispatch) => ({
-  // 4. Problem: we need to create fetchPeople function that returns action type and data with people
+  // 5. Problem: fetchPeople is not defined
   fetchPeople: () => dispatch(fetchPeople()),
 });
 
